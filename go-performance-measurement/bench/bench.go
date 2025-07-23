@@ -4,7 +4,7 @@ import (
 	"math"
 )
 
-func primeNumbers(max int) []int {
+func PrimeNumbers(max int) []int {
     var primes []int
 
     for i := 2; i < max; i++ {
