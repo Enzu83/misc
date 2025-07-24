@@ -1,4 +1,4 @@
-# Go Performance Measurement
+# Performance Measurement
 
 Go functions can have benchmarks to measure their performances.
 
