@@ -11,7 +11,7 @@ def get_mem_stats() -> dict:
 
         stat = stats.get(entry_type, {})
         stat['num'] = stat.get('num', 0) + n
-        stat['sz'] = stat.get('sz', 0) + n * sz
+        stat['sz'] = stat.get('sz', 0) + sz
 
         entries = stat.get('entries', [])
         entries.append([ref, n, sz])
