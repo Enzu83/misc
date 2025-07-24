@@ -1,5 +1,5 @@
 *.prof
-*.txt
+python/memory-usage/*.txt
 .venv/
 .DS_Store
 __pycache__/
