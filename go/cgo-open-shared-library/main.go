@@ -2,20 +2,53 @@ package main
 
 /*
 #include <dlfcn.h>
+#include <stdio.h>
 
-typedef void (*run_func_t)(void);
+typedef void (*exported_func_t)(void);
 
-void *open_library(char *name) {
+static exported_func_t cb_exported_function;
+void ExportedFunction(void);
+
+static void store_callback(exported_func_t cb) {
+	cb_exported_function = cb;
+}
+
+static void set_callback(void) {
+	store_callback(ExportedFunction);
+	printf("%p\n", (void*)cb_exported_function);
+}
+
+typedef struct instance_s {
+	exported_func_t cb;
+} instance_t;
+
+typedef void (*run_func_t)(const instance_t *);
+
+static void *open_library(char *name, const char **error) {
 	void *handle = dlopen(name, RTLD_LAZY | RTLD_GLOBAL);
+	if (handle == NULL) {
+		*error = "Can't find library";
+		return NULL;
+	}
 	return handle;
 }
 
-void *get_symbol(void *lib_handle, char* symbol_name) {
-	return dlsym(lib_handle, symbol_name);
+static void *get_symbol(void *lib_handle, char *symbol_name, const char **error) {
+	void *sym_handle = dlsym(lib_handle, symbol_name);
+	if (sym_handle == NULL) {
+		*error = "Can't find symbol";
+		return NULL;
+	}
+	
+	return sym_handle;
 }
 
-void exec_symbol(void *symbol_handle) {
-	((run_func_t)symbol_handle)();
+static void exec_symbol(void *symbol_handle) {
+	instance_t instance = { cb_exported_function };
+
+	printf("%p %p\n", (void*)cb_exported_function, (void*)instance.cb);
+
+	((run_func_t)symbol_handle)(&instance);
 }
 */
 import "C"
@@ -24,16 +57,25 @@ import (
 	"fmt"
 )
 
+//export ExportedFunction
+func ExportedFunction() {
+	fmt.Println("Hello from exported function!")
+}
+
 func main() {
-	handle := C.open_library(C.CString("./lib/libhello_world.dylib"))
-	if handle == nil {
-		fmt.Println("Can't find library.")
+	C.set_callback();
+
+	var err *C.char
+
+	handle := C.open_library(C.CString("./lib/libhello_world.dylib"), &err)
+	if err != nil {
+		fmt.Println(C.GoString(err))
 		return
 	}
 
-	symbol_handle := C.get_symbol(handle, C.CString("Run"))
-	if symbol_handle == nil {
-		fmt.Println("Can't find symbol.")
+	symbol_handle := C.get_symbol(handle, C.CString("Run"), &err)
+	if err != nil {
+		fmt.Println(C.GoString(err))
 		return
 	}
 
