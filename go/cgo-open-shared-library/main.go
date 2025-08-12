@@ -15,7 +15,6 @@ static void store_callback(exported_func_t cb) {
 
 static void set_callback(void) {
 	store_callback(ExportedFunction);
-	printf("%p\n", (void*)cb_exported_function);
 }
 
 typedef struct instance_s {
@@ -46,8 +45,6 @@ static void *get_symbol(void *lib_handle, char *symbol_name, const char **error)
 static void exec_symbol(void *symbol_handle) {
 	instance_t instance = { cb_exported_function };
 
-	printf("%p %p\n", (void*)cb_exported_function, (void*)instance.cb);
-
 	((run_func_t)symbol_handle)(&instance);
 }
 */
@@ -67,7 +64,7 @@ func main() {
 
 	var err *C.char
 
-	handle := C.open_library(C.CString("./lib/libhello_world.dylib"), &err)
+	handle := C.open_library(C.CString("lib/libhello_world.dylib"), &err)
 	if err != nil {
 		fmt.Println(C.GoString(err))
 		return
