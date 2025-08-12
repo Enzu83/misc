@@ -1,4 +1,4 @@
 [workspace]
 members = [
     "rust/hello-world-library"
-]
+, "rust/read-json-string"]
