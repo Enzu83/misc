@@ -1,6 +1,8 @@
 *.prof
 python/memory-usage/*.txt
 .venv/
+.vscode/
 .DS_Store
 __pycache__/
 target/
+build/
