@@ -1,0 +1,3 @@
+[workspace]
+members = ["macro-crate", "main-crate"]
+resolver = "2"
