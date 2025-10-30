@@ -1,3 +1,3 @@
 [workspace]
-members = ["rust/*"]
+members = ["c/periodical-lib-call","rust/*"]
 resolver = "2"
